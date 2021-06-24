@@ -10,6 +10,7 @@ client = discord.Client()
 async def on_ready():
     print('we have logged in as ' + str(client.user))
     print("Servers:")
+    await client.change_presence(activity=discord.Game("BeerPong") ,status=discord.Status.online)
     for guild in client.guilds:
         print(guild)
     print("")
