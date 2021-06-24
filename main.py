@@ -23,10 +23,13 @@ async def on_message(message):
 
     elif "bier" in message.content or "Bier" in message.content:
         now = datetime.datetime.now()
-        if now.hour > 16 or now.hour < 6:
-            await message.channel.send('Hab ich Bier gehört, ' + str(message.author.name) + '?😍')
+        print(now.weekday())
+        if(now.weekday() > 4) or (now.weekday() == 4 and now.hour > 13):
+            await message.channel.send("Hoch die Hände🙌\n! **!!WOCHENENDE!!**")
+        if now.hour >= 16 or now.hour < 6:
+            await message.channel.send('Hab ich **Bier** gehört, ' + str(message.author.name) + '?😍')
             await message.channel.send('🍻')
         else:
-            await message.channel.send('Kein Bier vor Vier 🕓')
+            await message.channel.send('Kein Bier vor Vier 🕓 😢')
 
 client.run(secrets.discord_token)
