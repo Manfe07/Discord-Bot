@@ -30,12 +30,19 @@ async def on_message(message):
             await message.channel.send("Hoch die Hände🙌\n! **!!WOCHENENDE!!**")
         if now.hour >= 16 or now.hour < 6:
             r = random.randrange(0,10,1)
-            print(r)
             if r == 7:
-                await message.channel.send('@everyone! ' + str(message.author.name) + " gibt **Bier** aus!🍻")
+                embed = discord.Embed(title='{} gibt Bier aus 🍻!!'.format(message.author.name),
+                                      description='@everyone!\n<@{}> ist der glückliche Gewinner und darf jetzt jedem ein Bier ausgeben!'.format(message.author.id),
+                                      colour=0xfcba03)
+                #embed.add_field(name='Bier:', value='Veltins', inline=True)
+                embed.set_thumbnail(url="https://image.flaticon.com/icons/png/512/761/761777.png")
+                embed.add_field(name="Wann?",value="ab jetzt",inline=True)
+                mes = await message.channel.send(embed=embed)
+                await mes.add_reaction('🍻')
             else:
                 await message.channel.send('Hab ich **Bier** gehört, ' + str(message.author.name) + '?😍')
                 await message.channel.send('🍻')
+
         else:
             await message.channel.send('Kein Bier vor Vier 🕓 😢')
 
