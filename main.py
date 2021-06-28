@@ -4,6 +4,7 @@ import datetime
 import secrets
 from db import database
 from models.guild import Guild
+import tools.homework as homework
 
 
 client = discord.Client()
@@ -17,7 +18,7 @@ async def on_ready():
     await client.change_presence(activity=discord.Game("BeerPong") ,status=discord.Status.online)
     for _guild in client.guilds:
         guilde = Guild(_guild.id, db)
-        guilde.guild_name = str(_guild)
+        guilde.set_guild_name(str(_guild))
         guilds.append(guilde)
         guilde.save_to_db()
         print(guilde.guild_name)
@@ -29,8 +30,12 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$hello'):
-        await message.channel.send('hello 🖐 ' + str(message.author.name))
+    elif message.content.startswith('!help') or message.content.startswith('!info'):
+        infotext = "`**INFO:**`\n"
+        infotext += "`!homework` - Abfragen der Hausaufgaben\n"
+        infotext += "`!homework, Fach, Aufgabe, Datum bis abgabe` - Neue Hausaufgaben Eintragen\n"
+        await message.channel.send(infotext)
+
 
     elif "bier" in message.content or "Bier" in message.content:
         now = datetime.datetime.now()
@@ -62,33 +67,8 @@ async def on_message(message):
 
     #!homework
     elif message.content.startswith('!homework'):
-        content = message.content.split(',')
-        if (len(content)) == 4:
-            homework = {}
-            subject = content[1]
-            homework["subject"] = subject
-            task = content[2]
-            homework["task"] = task
-            date = content[3]
-            #date = datetime.datetime.strptime(content[3], '%d.%m.%y')
-            print(date)
-            homework["date"] = date
-            db.create_homework(message.guild.id, subject, task, date)
-            await message.channel.send(task + " in/bei " + subject + " bis zum " + date)
+        await homework.handle_message(message, db)
 
-        elif len(content) == 1:
-            homework_list = db.get_homework(message.guild.id)
-            print(homework_list)
-            print(homework_list)
-            if len(homework_list) > 0:
-                for homework in homework_list:
-                    subject = homework["subject"]
-                    task = homework["task"]
-                    date = homework["date"]
-                    await message.channel.send(task + " in/bei " + subject + " bis zum " + date)
-            else:
-                await message.channel.send("Keine Hausaufgaben 🎉")
-        else:
-            await message.channel.send("Leider konnte ich deine eingabe für die Hausaufgaben verstehen😔\nVersuche es mit:\n`!homework, Fach, Aufgabe, Datum bis abgabe`")
+
 client.run(secrets.discord_token)
 
