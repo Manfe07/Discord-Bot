@@ -63,14 +63,31 @@ async def on_message(message):
     #!homework
     elif message.content.startswith('!homework'):
         content = message.content.split(',')
-        print(content)
         if (len(content)) == 4:
+            homework = {}
             subject = content[1]
-            tasks = content[2]
+            homework["subject"] = subject
+            task = content[2]
+            homework["task"] = task
             date = content[3]
-            await message.channel.send(tasks + " in/bei " + subject + " bis zum " + date)
+            #date = datetime.datetime.strptime(content[3], '%d.%m.%y')
+            print(date)
+            homework["date"] = date
+            db.create_homework(message.guild.id, subject, task, date)
+            await message.channel.send(task + " in/bei " + subject + " bis zum " + date)
+
         elif len(content) == 1:
-            await message.channel.send("hier würden jetzt die Hausaufgaben stehen")
+            homework_list = db.get_homework(message.guild.id)
+            print(homework_list)
+            print(homework_list)
+            if len(homework_list) > 0:
+                for homework in homework_list:
+                    subject = homework["subject"]
+                    task = homework["task"]
+                    date = homework["date"]
+                    await message.channel.send(task + " in/bei " + subject + " bis zum " + date)
+            else:
+                await message.channel.send("Keine Hausaufgaben 🎉")
         else:
             await message.channel.send("Leider konnte ich deine eingabe für die Hausaufgaben verstehen😔\nVersuche es mit:\n`!homework, Fach, Aufgabe, Datum bis abgabe`")
 client.run(secrets.discord_token)
