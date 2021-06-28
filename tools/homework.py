@@ -7,7 +7,7 @@ import tools.str_tools as str_tools
 async def handle_message(message : discord.Message, db : database):
     content = message.content.split(',')
     if (len(content)) == 4:
-        save_homework(message, db)
+        await save_homework(message, db)
 
     elif len(content) == 1:
         await print_homework(message, db)
