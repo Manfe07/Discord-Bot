@@ -8,21 +8,20 @@ class Guild():
 
     def __init__(self, id, db):
         self.id = id
-        result = self.db.get_guild(id)
-        if result != 0:
-            data = result["data"]
-            self.guild_name = data["guild_name"]
-            self.spam_channel_id = data["channel_id"]
-        else:
-            self.save_to_db()
-
         self.db = db
+        data = self.db.get_guild(id)
+        try:
+            self.spam_channel_id = data["channel_id"]
+        except Exception as e:
+            print(e)
 
     def save_to_db(self):
-        data = {"channel_id" : self.spam_channel_id,
-                "guild_name" : self.guild_name}
-        self.db.update_guild(self.id, data)
+        self.db.update_guild(self.id, "channel_id", self.spam_channel_id)
 
     def set_channel_id(self, _channel_id):
         self.spam_channel_id = _channel_id
-        self.save_to_db()
+        self.db.update_guild(self.id, "channel_id", self.spam_channel_id)
+
+    def set_guild_name(self, _guildName):
+        self.guild_name = _guildName
+        self.db.update_guild(self.id, "guild_name", self.guild_name)
