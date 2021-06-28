@@ -53,9 +53,25 @@ async def on_message(message):
 
         else:
             await message.channel.send('Kein Bier vor Vier 🕓 😢')
+
+    #!join
     elif message.content.startswith('!join'):
         guild = Guild(message.guild.id,db)
         guild.set_channel_id(message.channel.id)
         await  message.channel.send('Ich arbeite jetzt im Channel {}'.format(message.channel.name))
 
+    #!homework
+    elif message.content.startswith('!homework'):
+        content = message.content.split(',')
+        print(content)
+        if (len(content)) == 4:
+            subject = content[1]
+            tasks = content[2]
+            date = content[3]
+            await message.channel.send(tasks + " in/bei " + subject + " bis zum " + date)
+        elif len(content) == 1:
+            await message.channel.send("hier würden jetzt die Hausaufgaben stehen")
+        else:
+            await message.channel.send("Leider konnte ich deine eingabe für die Hausaufgaben verstehen😔\nVersuche es mit:\n`!homework, Fach, Aufgabe, Datum bis abgabe`")
 client.run(secrets.discord_token)
+

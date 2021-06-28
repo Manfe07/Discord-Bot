@@ -11,7 +11,6 @@ class Guild():
         result = self.db.get_guild(id)
         if result != 0:
             data = result["data"]
-            print(data)
             self.guild_name = data["guild_name"]
             self.spam_channel_id = data["channel_id"]
         else:
