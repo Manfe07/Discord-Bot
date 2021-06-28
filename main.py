@@ -53,5 +53,9 @@ async def on_message(message):
 
         else:
             await message.channel.send('Kein Bier vor Vier 🕓 😢')
+    elif message.content.startswith('!join'):
+        guild = Guild(message.guild.id,db)
+        guild.set_channel_id(message.channel.id)
+        await  message.channel.send('Ich arbeite jetzt im Channel {}'.format(message.channel.name))
 
 client.run(secrets.discord_token)
