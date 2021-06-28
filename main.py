@@ -1,18 +1,26 @@
 import random
-
 import discord
 import datetime
 import secrets
+from db import database
+from models.guild import Guild
+
 
 client = discord.Client()
+db = database()
+guilds = []
 
 @client.event
 async def on_ready():
     print('we have logged in as ' + str(client.user))
     print("Servers:")
     await client.change_presence(activity=discord.Game("BeerPong") ,status=discord.Status.online)
-    for guild in client.guilds:
-        print(guild)
+    for _guild in client.guilds:
+        guilde = Guild(_guild.id, db)
+        guilde.guild_name = str(_guild)
+        guilds.append(guilde)
+        guilde.save_to_db()
+        print(guilde.guild_name)
     print("")
 
 @client.event
