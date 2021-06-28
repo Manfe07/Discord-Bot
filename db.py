@@ -17,6 +17,17 @@ class database():
     def update_guild(self, id, data : dict):
         self.db.update({'data': data}, search_query.id == id)
 
+    def update_homework(self, id, homework : list):
+        self.db.update({'homework': homework}, search_query.id == id)
+
+    def get_homework(self, id):
+        result = self.get_guild(id)
+        try:
+            return result["homework"]
+        except Exception:
+            print(Exception)
+            return []
+        
 if __name__ == "__main__":
     database = database()
 
